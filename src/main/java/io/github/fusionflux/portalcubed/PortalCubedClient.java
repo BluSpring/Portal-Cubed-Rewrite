@@ -12,7 +12,6 @@ import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
 public class PortalCubedClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient(ModContainer mod) {
-		PortalRenderer.init();
 		PortalCubedColorProviders.init();
 
 		PreparableModelLoadingPlugin.register(EmissiveLoader.INSTANCE, PortalCubedModelLoadingPlugin.INSTANCE);

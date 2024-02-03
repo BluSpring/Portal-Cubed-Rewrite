@@ -88,9 +88,10 @@ public abstract class AbstractMultiBlock extends DirectionalBlock {
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
-		sizeProperties().x.map(builder::add);
-		sizeProperties().y.map(builder::add);
-		sizeProperties().z.map(builder::add);
+		var sizeProperties = sizeProperties();
+		sizeProperties.x.map(builder::add);
+		sizeProperties.y.map(builder::add);
+		sizeProperties.z.map(builder::add);
 	}
 
 	@SuppressWarnings("deprecation")

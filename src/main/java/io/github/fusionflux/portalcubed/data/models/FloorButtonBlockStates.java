@@ -45,7 +45,7 @@ public class FloorButtonBlockStates extends FabricModelProvider {
 		var regularModelId = ModelLocationUtils.getModelLocation(floorButtonBlock);
 		var activeModelId = ModelLocationUtils.getModelLocation(floorButtonBlock, "_active");
 
-		var sizeProperties = floorButtonBlock.sizeProperties();
+		var sizeProperties = floorButtonBlock.sizeProperties;
 		var xProp = sizeProperties.x().get();
 		var yProp = sizeProperties.y().get();
 
