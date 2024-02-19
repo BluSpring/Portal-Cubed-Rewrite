@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.util.FastColor;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -116,10 +117,12 @@ public class PortalRenderer {
 		matrices.translate(-0.5f, -1, 0);
 		// small offset away from the wall to not z-fight
 		matrices.translate(0, 0, -OFFSET_FROM_WALL);
-		// RenderSystem.setShaderColor(FastColor.ARGB32.red(portal.color) / 255, FastColor.ARGB32.green(portal.color) / 255, FastColor.ARGB32.blue(portal.color) / 255, FastColor.ARGB32.alpha(portal.color) / 255);
-		// RenderSystem.setShaderTexture(0, portal.shape.texture);
+		// RenderSystem.setShaderColor(FastColor.ABGR32.red(portal.color) / 255f, FastColor.ABGR32.green(portal.color) / 255f, FastColor.ABGR32.blue(portal.color) / 255f, 1);
+		// var renderType = RenderType.beaconBeam(portal.shape.texture, true);
+		// renderType.setupRenderState();
 		// PORTAL_QUAD.render(matrices, projectionMatrix, GameRenderer.getRendertypeBeaconBeamShader());
-		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+		// renderType.clearRenderState();
+		// RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		if (isViewRenderingEnabled() && viewLayer < MAX_VIEW_LAYERS) {
 			RenderingUtils.STENCIL_TEST.enable();
 			RenderingUtils.DEPTH_CLAMP.enable();
@@ -150,7 +153,6 @@ public class PortalRenderer {
 			final var oldFrustum = ((LevelRendererAccessor) levelRenderer).portalcubed$getCullingFrustum();
 			final var oldRenderChunksInFrustum = ((LevelRendererAccessor) levelRenderer).portalcubed$getRenderChunksInFrustum();
 			((LevelRendererAccessor) levelRenderer).portalcubed$setRenderChunksInFrustum(new ObjectArrayList<>(oldRenderChunksInFrustum));
-			((LevelRendererAccessor) levelRenderer).portalcubed$setCapturedFrustum(oldFrustum);
 
 			final var oldRenderHand = ((GameRendererAccessor) gameRenderer).portalcubed$getRenderHand();
 			gameRenderer.setRenderHand(false);
@@ -159,7 +161,9 @@ public class PortalRenderer {
 			{
 				final var oldPoseStack = RenderSystem.getModelViewStack();
 				viewLayer++;
-				gameRenderer.renderLevel(tickDelta, Util.getNanos(), new PoseStack());
+				var poseCopy = new PoseStack();
+				poseCopy.mulPose(portal.rotation180);
+				gameRenderer.renderLevel(tickDelta, Util.getNanos(), poseCopy);
 				GlStateManager._enableDepthTest();
 				viewLayer--;
 				RenderSystemAccessor.setModelViewStack(oldPoseStack);
